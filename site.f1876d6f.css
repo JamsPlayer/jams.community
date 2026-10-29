@@ -1180,11 +1180,39 @@ a:hover {
 /* Public release: a moment with no real screenshot yet shows its copy only
    (founder 2026-10-29: hide empty spots). The media column collapses and the
    copy takes the full width. */
-.f-media:has(> .slot:not(:has(img))),
-.moment__media:has(> .slot:not(:has(img))) {
+/* :has() never nests inside :has() (the browser drops the whole rule), so
+   these test for a missing img with :not(:has(...)) instead. */
+.f-media:not(:has(img)),
+.moment__media:not(:has(img)) {
   display: none;
 }
-.feature:has(> .f-media > .slot:not(:has(img))),
-.moment__inner:has(> .moment__media > .slot:not(:has(img))) {
+.feature:has(> .f-media):not(:has(> .f-media img)),
+.moment__inner:has(> .moment__media):not(:has(> .moment__media img)) {
   grid-template-columns: minmax(0, 1fr);
+}
+
+/* Desktop captures run full width (founder 2026-10-29: desktop shots were too
+   small to read). A row holding a desktop screenshot stacks: copy first, then
+   the capture across the whole wrap. Captured frames keep their own aspect
+   ratio, so nothing is cropped. Phone rows keep the two-column layout. */
+.moment__inner:has(> .moment__media > .slot--desktop img),
+.feature:has(> .f-media > .slot--desktop img) {
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+}
+.moment--flip .moment__inner:has(> .moment__media > .slot--desktop img) .moment__copy,
+.feature.flip:has(> .f-media > .slot--desktop img) .f-copy {
+  order: -1;
+}
+.moment__inner:has(> .moment__media > .slot--desktop img) .moment__copy {
+  max-width: 640px;
+}
+.slot--desktop:has(img) {
+  max-width: none;
+  aspect-ratio: auto;
+}
+.slot--desktop:has(img) picture,
+.slot--desktop:has(img) img {
+  height: auto;
+  object-fit: contain;
 }
