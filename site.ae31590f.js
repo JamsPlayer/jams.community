@@ -99,99 +99,6 @@
   }
 
   /* ---------------------------------------------------------------------
-   * Jams Player — the Dial. Scrubs a static hand-written waveform (no
-   * audio, no autoplay). A pure scrubber: no payment meaning of any kind.
-   * Drag, arrow keys (2 s / 10 s with Shift), wheel, Home/End.
-   * ------------------------------------------------------------------- */
-  function initDial() {
-    var knob = document.getElementById("jp-dial-knob");
-    if (!knob) return;
-    var pointer = document.getElementById("jp-dial-pointer");
-    var bars = Array.prototype.slice.call(document.querySelectorAll(".dial__bar"));
-    var timeEl = document.getElementById("jp-dial-time");
-
-    var DURATION = 192; /* 3:12 — the static CC waveform's length */
-    var seconds = 31;
-    var ANGLE_SPAN = 324; /* the Dial's travel, per SITES_DESIGN_BRIEF §4 */
-    var ANGLE_START = -ANGLE_SPAN / 2;
-
-    function fmt(s) {
-      var m = Math.floor(s / 60);
-      var r = Math.floor(s % 60);
-      return m + ":" + (r < 10 ? "0" : "") + r;
-    }
-
-    function render() {
-      var frac = seconds / DURATION;
-      var angle = ANGLE_START + frac * ANGLE_SPAN;
-      if (pointer) pointer.style.transform = "rotate(" + angle + "deg)";
-      var playedBars = Math.round(frac * bars.length);
-      bars.forEach(function (b, i) {
-        b.classList.toggle("dial__bar--played", i < playedBars);
-      });
-      if (timeEl) timeEl.textContent = fmt(seconds);
-      knob.setAttribute("aria-valuenow", String(Math.round(seconds)));
-      knob.setAttribute("aria-valuetext", fmt(seconds) + " of " + fmt(DURATION));
-    }
-
-    function setSeconds(next) {
-      seconds = Math.min(DURATION, Math.max(0, next));
-      render();
-    }
-
-    function fractionFromPoint(clientX, clientY) {
-      var rect = knob.getBoundingClientRect();
-      var cx = rect.left + rect.width / 2;
-      var cy = rect.top + rect.height / 2;
-      var deg = (Math.atan2(clientX - cx, -(clientY - cy)) * 180) / Math.PI;
-      var a = Math.max(ANGLE_START, Math.min(ANGLE_START + ANGLE_SPAN, deg));
-      return (a - ANGLE_START) / ANGLE_SPAN;
-    }
-
-    var dragging = false;
-    knob.addEventListener("pointerdown", function (e) {
-      dragging = true;
-      knob.setPointerCapture(e.pointerId);
-      setSeconds(fractionFromPoint(e.clientX, e.clientY) * DURATION);
-    });
-    knob.addEventListener("pointermove", function (e) {
-      if (!dragging) return;
-      setSeconds(fractionFromPoint(e.clientX, e.clientY) * DURATION);
-    });
-    knob.addEventListener("pointerup", function () { dragging = false; });
-    knob.addEventListener("pointercancel", function () { dragging = false; });
-
-    knob.addEventListener("keydown", function (e) {
-      var step = e.shiftKey ? 10 : 2;
-      if (e.key === "ArrowRight" || e.key === "ArrowUp") {
-        e.preventDefault();
-        setSeconds(seconds + step);
-      } else if (e.key === "ArrowLeft" || e.key === "ArrowDown") {
-        e.preventDefault();
-        setSeconds(seconds - step);
-      } else if (e.key === "Home") {
-        e.preventDefault();
-        setSeconds(0);
-      } else if (e.key === "End") {
-        e.preventDefault();
-        setSeconds(DURATION);
-      }
-    });
-
-    knob.addEventListener(
-      "wheel",
-      function (e) {
-        if (reducedMotion) return; /* the one continuous-gesture path; skip under reduced motion */
-        e.preventDefault();
-        setSeconds(seconds + (e.deltaY > 0 ? -2 : 2));
-      },
-      { passive: false }
-    );
-
-    render();
-  }
-
-  /* ---------------------------------------------------------------------
    * Personal Soundtrack — "Set the scene". Three scenario buttons swap two
    * plain lines of site copy: which track it picks, and one short sentence
    * of what was read. Site-native paragraphs, not an app-panel mockup — no
@@ -249,7 +156,6 @@
     initTheme();
     initReducedMotionGuard();
     initMenu();
-    initDial();
     initSceneBoard();
   }
 

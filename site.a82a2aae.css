@@ -958,68 +958,6 @@ a:hover {
   background: var(--surface);
 }
 
-/* Dial (JP) */
-.dial {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  width: 100%;
-  min-width: 0;
-}
-.dial__knob-wrap {
-  display: flex;
-  justify-content: center;
-}
-.dial__knob {
-  width: 160px;
-  height: 160px;
-  border-radius: var(--radius-full);
-  background: var(--surface-2);
-  border: 1px solid var(--border-strong);
-  position: relative;
-  flex-shrink: 0;
-  box-shadow: var(--shadow-lg);
-  touch-action: none;
-  cursor: grab;
-}
-.dial__knob:active {
-  cursor: grabbing;
-}
-.dial__pointer {
-  position: absolute;
-  left: 50%;
-  top: 12px;
-  width: 6px;
-  height: 52px;
-  margin-left: -3px;
-  border-radius: 3px;
-  background: var(--accent);
-  transform-origin: 50% 68px;
-}
-.dial__waveform {
-  display: flex;
-  align-items: flex-end;
-  gap: 2px;
-  height: 56px;
-}
-.dial__bar {
-  flex: 1 1 0;
-  min-width: 0;
-  max-width: 4px;
-  border-radius: 2px;
-  background: var(--border-strong);
-}
-.dial__bar--played {
-  background: var(--accent);
-}
-.dial__readout {
-  display: flex;
-  justify-content: space-between;
-  font-family: var(--font-mono);
-  font-size: var(--text-sm);
-  color: var(--text-tertiary);
-}
-
 /* Scene board (PS) — "Set the scene": three scenario buttons swap two plain
    lines of site copy (which track it picks, one sentence of what was
    read). M-4 (2026-09-16 review, supersedes the earlier context-readout-
