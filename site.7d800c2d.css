@@ -1239,15 +1239,14 @@ a:hover {
 :root.reduced-motion .door:hover {
   transform: none;
 }
-/* Public release: an empty slot shows no internal capture notes, only that a
-   real screenshot is still to come (real-captures rule: empty, labelled). */
-.slot:not(:has(img)) > .slot__id,
-.slot:not(:has(img)) > .slot__note,
-.slot:not(:has(img)) > .slot__flag {
+/* Public release: a moment with no real screenshot yet shows its copy only
+   (founder 2026-10-29: hide empty spots). The media column collapses and the
+   copy takes the full width. */
+.f-media:has(> .slot:not(:has(img))),
+.moment__media:has(> .slot:not(:has(img))) {
   display: none;
 }
-.slot:not(:has(img))::after {
-  content: "Screenshot coming soon";
-  font-size: var(--text-sm);
-  color: var(--text-muted);
+.feature:has(> .f-media > .slot:not(:has(img))),
+.moment__inner:has(> .moment__media > .slot:not(:has(img))) {
+  grid-template-columns: minmax(0, 1fr);
 }
