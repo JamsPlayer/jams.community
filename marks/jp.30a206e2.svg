@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024" role="img" aria-label="jams-player app icon">
+  <title>jams-player app icon</title>
+  <rect x="0" y="0" width="1024" height="1024" rx="228" ry="228" fill="#1a1613"></rect>
+  <g transform="translate(192 192) scale(5.333333)">
+  <path d="M103.66 37.76 A49 49 0 1 1 82.24 16.34" fill="none" stroke="#ff5a3c" stroke-width="10"></path>
+  <path fill-rule="evenodd" d="M24 60 A36 36 0 1 1 96 60 A36 36 0 1 1 24 60 Z M70.96 53.98 L82.27 42.67 A3.5 3.5 0 0 0 77.33 37.73 L66.02 49.04 A3.5 3.5 0 0 0 70.96 53.98 Z" fill="#ff5a3c"></path>
+  </g>
+</svg>

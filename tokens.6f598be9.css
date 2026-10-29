@@ -1,0 +1,360 @@
+/* ============================================================================
+   JAMS ECOSYSTEM — DESIGN TOKENS
+   Single source of truth for color, type, space, radius, elevation, motion.
+   Consumed by all three apps: Personal Soundtrack (PS), Jams Player (JP), JamStand.
+
+   Architecture:
+     :root            → shared primitives + shared semantic tokens (the "spine")
+     [data-app="..."] → per-app accent + identity overrides (the "siblings")
+     [data-theme]     → dark (default) / light surface ramps
+
+   Rule of the house: components read SEMANTIC tokens (--surface, --text, --accent),
+   never primitives (--ink-800, --violet-500) directly. Re-theme by swapping the
+   semantic layer, never by find-replacing component code.
+   ============================================================================ */
+
+:root {
+  /* ---- NEUTRAL SPINE (warm, desaturated — not pure black, not cold gray) ----
+     A hair of warmth (hue ~32, very low sat) reads crafted/human. Pure #0a0a0a
+     reads sterile and is one of the AI-default looks we are explicitly avoiding. */
+  --ink-950: #14110f;  /* deepest background */
+  --ink-900: #1a1613;  /* app background */
+  --ink-850: #211c18;  /* raised surface */
+  --ink-800: #2a241f;  /* card / panel */
+  --ink-750: #322b25;  /* card hover */
+  --ink-700: #3a332c;  /* hairline / border */
+  --ink-600: #4e463d;  /* strong border */
+  --ink-500: #8a8077;  /* muted / disabled text */
+  --ink-400: #a89e94;  /* tertiary text */
+  --ink-300: #c9bfb4;  /* secondary text */
+  --ink-200: #e0d8cd;
+  --ink-100: #f2ece4;  /* primary text (warm off-white, never pure #fff) */
+  --ink-50:  #faf6f0;  /* paper white */
+
+  /* ---- SHARED SEMANTIC COLOR (status reads the same in all three apps) ---- */
+  --success: #36b37e;
+  --warning: #e8a13a;
+  --danger:  #e5484d;
+  --success-dim: #1f6b4d;
+  --warning-dim: #8a5e1c;
+  --danger-dim:  #8a2b2e;
+
+  /* ---- TYPOGRAPHY ----
+     Self-hostable, no-CDN faces (privacy posture: no font-host beacon).
+     Display: Clash Display · Text/UI: General Sans · Mono: JetBrains Mono.
+     See foundations/02-typography.md for rationale + fallbacks. */
+  --font-display: "Clash Display", "General Sans", system-ui, sans-serif;
+  --font-text:    "General Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono:    "JetBrains Mono", "Geist Mono", ui-monospace, "SF Mono", monospace;
+
+  /* Type scale (rem). Major-third-ish for headings, tight steps for UI. */
+  --text-2xs:  0.6875rem; /* 11 — legal, badges */
+  --text-xs:   0.75rem;   /* 12 — captions, metadata */
+  --text-sm:   0.875rem;  /* 14 — secondary UI */
+  --text-base: 1rem;      /* 16 — body default */
+  --text-md:   1.125rem;  /* 18 — emphasized body */
+  --text-lg:   1.25rem;   /* 20 — subheads */
+  --text-xl:   1.5rem;    /* 24 — section titles */
+  --text-2xl:  1.875rem;  /* 30 — screen titles */
+  --text-3xl:  2.25rem;   /* 36 — display small */
+  --text-4xl:  3rem;      /* 48 — display */
+  --text-5xl:  3.75rem;   /* 60 — hero / marketing */
+
+  --leading-tight: 1.12;  /* display / large headings */
+  --leading-snug:  1.3;   /* subheads */
+  --leading-base:  1.5;   /* body */
+  --leading-relaxed: 1.65;/* long-form reading */
+
+  --weight-regular: 400;
+  --weight-medium:  500;
+  --weight-semibold: 600;
+  --weight-bold:    700;
+
+  /* Optical tracking — tighten large type, open up small/all-caps. */
+  --track-tight:  -0.02em;  /* display */
+  --track-snug:   -0.01em;  /* headings */
+  --track-normal:  0;
+  --track-wide:    0.04em;  /* eyebrows, all-caps labels */
+  --track-mono:    0.01em;
+
+  /* ---- SPACING (4px base grid) ---- */
+  --space-0: 0;
+  --space-1: 0.25rem;  /* 4 */
+  --space-2: 0.5rem;   /* 8 */
+  --space-3: 0.75rem;  /* 12 */
+  --space-4: 1rem;     /* 16 */
+  --space-5: 1.25rem;  /* 20 */
+  --space-6: 1.5rem;   /* 24 */
+  --space-8: 2rem;     /* 32 */
+  --space-10: 2.5rem;  /* 40 */
+  --space-12: 3rem;    /* 48 */
+  --space-16: 4rem;    /* 64 */
+  --space-20: 5rem;    /* 80 */
+  --space-24: 6rem;    /* 96 */
+
+  /* ---- RADIUS ----
+     Workhorses are md/lg. Key hero elements (album art, now-playing) should use
+     continuous "squircle" corners where supported — see foundations notes. */
+  --radius-sm:  6px;
+  --radius-md:  10px;   /* buttons, inputs, small cards */
+  --radius-lg:  14px;   /* cards, panels */
+  --radius-xl:  20px;   /* sheets, modals */
+  --radius-2xl: 28px;   /* large surfaces, now-playing */
+  --radius-full: 9999px;
+
+  /* ---- ELEVATION ----
+     In dark UI, elevation is mostly a TONAL step (lighter surface) + a restrained
+     shadow + an optional 1px top highlight. Heavy drop shadows read cheap on dark. */
+  --shadow-sm:  0 1px 2px rgba(0,0,0,0.28);
+  --shadow-md:  0 4px 12px rgba(0,0,0,0.32);
+  --shadow-lg:  0 12px 32px rgba(0,0,0,0.40);
+  --shadow-xl:  0 24px 64px rgba(0,0,0,0.48);
+  --highlight-top: inset 0 1px 0 rgba(255,255,255,0.05); /* catches light on a raised edge */
+
+  /* ---- MOTION (mirror of tokens/motion.ts; CSS-only fallbacks live here) ----
+     Springs are the primary system (JS). These durations/easings are for the rare
+     CSS-only cases (opacity fades, color, simple hover) where a spring isn't worth it. */
+  --dur-instant: 80ms;
+  --dur-fast:    140ms;  /* micro-interactions */
+  --dur-base:    220ms;  /* most transitions */
+  --dur-slow:    320ms;  /* large surfaces */
+  --dur-slower:  480ms;  /* page-scale / ambient */
+
+  --ease-standard:  cubic-bezier(0.2, 0, 0, 1);   /* decelerate-heavy "settle" */
+  --ease-emphasized: cubic-bezier(0.3, 0, 0, 1);
+  --ease-exit:      cubic-bezier(0.4, 0, 1, 1);    /* accelerate out */
+
+  --stagger-step: 24ms; /* between list items; cap cascade at ~8 items, rest instant */
+
+  /* ---- Z-INDEX SCALE ---- */
+  --z-base: 0;
+  --z-raised: 10;
+  --z-sticky: 100;
+  --z-overlay: 1000;
+  --z-modal: 1100;
+  --z-toast: 1200;
+}
+
+/* ============================================================================
+   DARK THEME (default) — semantic surfaces + text mapped onto the spine
+   ============================================================================ */
+:root,
+[data-theme="dark"] {
+  color-scheme: dark;
+  --bg:            var(--ink-900);
+  --bg-deep:       var(--ink-950);
+  --surface:       var(--ink-850);
+  --surface-2:     var(--ink-800);
+  --surface-hover: var(--ink-750);
+  --border:        var(--ink-700);
+  --border-strong: var(--ink-600);
+
+  --text:          var(--ink-100);
+  --text-secondary: var(--ink-300);
+  --text-tertiary: var(--ink-400);
+  --text-muted:    var(--ink-500);
+  --text-on-accent: #14110f; /* dark text sits on the bright accents below */
+
+  --overlay-scrim: rgba(10, 8, 6, 0.6);
+}
+
+/* ============================================================================
+   LIGHT THEME — paper-warm, for JamStand business surfaces, web, press
+   ============================================================================ */
+[data-theme="light"] {
+  color-scheme: light;
+  --bg:            var(--ink-50);
+  --bg-deep:       #ffffff;
+  --surface:       #ffffff;
+  --surface-2:     #f4eee6;
+  --surface-hover: #ece4d9;
+  --border:        #e2d8cb;
+  --border-strong: #cdc0b0;
+
+  --text:          var(--ink-950);
+  --text-secondary: #4e463d;
+  --text-tertiary: #6f655a;
+  --text-muted:    #8a8077;
+  --text-on-accent: #ffffff;
+
+  --overlay-scrim: rgba(20, 17, 15, 0.4);
+  --shadow-sm:  0 1px 2px rgba(20,17,15,0.06);
+  --shadow-md:  0 4px 12px rgba(20,17,15,0.08);
+  --shadow-lg:  0 12px 32px rgba(20,17,15,0.12);
+  --shadow-xl:  0 24px 64px rgba(20,17,15,0.16);
+  --highlight-top: inset 0 1px 0 rgba(255,255,255,0.6);
+}
+
+/* ============================================================================
+   PER-APP ACCENT IDENTITY — the "siblings, not clones" layer.
+   Everything above is shared. Only the accent + a couple of identity hooks change.
+   ============================================================================ */
+
+/* ---- PERSONAL SOUNDTRACK (PS) — adaptive warm→cool spectrum --------------
+   PS's signature is that the accent IS your state: it can shift along a spectrum
+   driven by biometric/mood input. --ps-state-* are the anchors; the running app
+   interpolates between them on-device. --accent is the balanced default. */
+[data-app="ps"] {
+  --accent:        #ff9457;  /* balanced default (warm amber-coral) */
+  --accent-hover:  #ff8440;
+  --accent-press:  #f5742c;
+  --accent-dim:    #6e4630;  /* low-emphasis accent surfaces */
+  --accent-ghost:  rgba(255, 148, 87, 0.12);
+  --focus-ring:    #ff9457;
+
+  /* Biometric/mood spectrum anchors (interpolated at runtime) */
+  --ps-state-calm:    #5ba8d9;  /* low arousal — cool */
+  --ps-state-focus:   #4fc2a8;  /* steady focus — cool-green */
+  --ps-state-balanced:#ff9457;  /* neutral — warm */
+  --ps-state-elevated:#ff5e7a;  /* high energy — hot */
+}
+
+/* ---- JAMS PLAYER (JP) — rich violet/indigo ---------------------------
+   The listening surface. Reads rich + creative + music-forward, and is
+   deliberately NOT streaming-green. */
+[data-app="jp"] {
+  --accent:        #ff5a3c;  /* Ember — warm, analog, deliberately not the AI-default violet */
+  --accent-hover:  #ff6b50;
+  --accent-press:  #e84a2c;
+  --accent-dim:    #6e3326;
+  --accent-ghost:  rgba(255, 90, 60, 0.12);
+  --focus-ring:    #ff5a3c;
+}
+
+/* ---- JAMSTAND — trustworthy teal + warm stage spotlight -----------------
+   The artist business surface (catalog, earnings, verification, B2B, live).
+   Teal = trust/craft. --spotlight is the warm secondary reserved for the
+   live-music / venue / ticketing surfaces only. */
+[data-app="jamstand"] {
+  --accent:        #16b8a6;
+  --accent-hover:  #13a695;
+  --accent-press:  #0e9488;
+  --accent-dim:    #0c4f49;
+  --accent-ghost:  rgba(22, 184, 166, 0.12);
+  --focus-ring:    #16b8a6;
+
+  --spotlight:       #f5a623;  /* live events / ticketing only */
+  --spotlight-ghost: rgba(245, 166, 35, 0.12);
+}
+
+/* ============================================================================
+   QUALITY-FLOOR PRIMITIVES (every app inherits these for free)
+   ============================================================================ */
+
+/* Visible keyboard focus everywhere. Never remove outlines without a replacement. */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--focus-ring, var(--accent));
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* Reduced motion: collapse transforms, keep a fast opacity crossfade. Polish and
+   accessible are not in tension — this is part of the spec, not an afterthought. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: var(--dur-fast) !important;
+    transition-property: opacity, color, background-color, border-color !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ============================================================================
+   SITES LAYER — SITES_DESIGN_BRIEF.md §2 "known drift to reconcile".
+   Everything above this line is the verbatim design-system copy; only this
+   block is sites-specific. Two additions, not edits to the spine above:
+   1. [data-app="ps"] --accent here is violet (the approved canvas + the
+      shipped app-icon), overriding the amber default above for site pages
+      only — the token-reconciliation lane is a separate follow-up.
+   2. [data-app="hub"] has no entry above (hub is not one of the three apps);
+      the hub uses the JP Ember accent on the neutral spine per the canvas.
+   ============================================================================ */
+[data-app="ps"] {
+  --accent:        #8b6cff;
+  --accent-hover:  #9b80ff;
+  --accent-press:  #7658e0;
+  --accent-dim:    #4a3d73;
+  --accent-ghost:  rgba(139, 108, 255, 0.12);
+  --focus-ring:    #8b6cff;
+}
+
+[data-app="hub"] {
+  --accent:        #ff5a3c;
+  --accent-hover:  #ff6b50;
+  --accent-press:  #e84a2c;
+  --accent-dim:    #6e3326;
+  --accent-ghost:  rgba(255, 90, 60, 0.12);
+  --focus-ring:    #ff5a3c;
+}
+
+/* P1-2 (2026-09-16 review): the design-system spine's light-theme
+   --text-on-accent: #ffffff (line ~178 above) fails AA against every one of
+   this branch's light-theme accents — measured hero-CTA contrast: hub/jp
+   3.10:1, ps 3.69:1, jamstand 2.49:1 (jamstand ships light by default, so
+   this was its worst-contrast element). Overriding to a dark ink instead
+   measures 6.07:1 / 5.09:1 / 7.56:1 respectively — all pass AA (>= 4.5:1).
+   Same token drives .money__seg labels and the pressed
+   .scene-board__scenario state, both fixed by this one override. */
+[data-theme="light"] {
+  --text-on-accent: #14110f;
+}
+
+/* ============================================================================
+   SITES LAYER, MOCKUP V2 (accepted by the founder 2026-10-18).
+   The site-specific page ramp, accent trio and glow from the accepted mockup.
+   Dark-first (the apps are dark-only); the light theme is paper-warm. The
+   light accents are darker than the dark ones so accent text clears AA on the
+   paper background. Components read these names; the semantic tokens above
+   still drive the legal pages and the interaction widgets.
+   ============================================================================ */
+:root,
+[data-theme="dark"] {
+  --page:    #14110f;
+  --page-2:  #1a1613;
+  --panel:   #211c18;
+  --card:    #2a241f;
+  --line:    #3a332c;
+  --line-2:  #4e463d;
+  --fg:      #f2ece4;
+  --fg-2:    #c9bfb4;
+  --fg-3:    #a89e94;
+  --fg-4:    #8a8077;
+  --jp:      #ff5a3c;
+  --ps:      #8b6cff;
+  --js:      #16b8a6;
+  --ok:      #36b37e;
+  --warn:    #e8a13a;
+  --shot-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.7);
+  --glow: radial-gradient(60% 60% at 70% 30%, rgba(255, 90, 60, 0.16), transparent 70%),
+          radial-gradient(50% 50% at 20% 80%, rgba(139, 108, 255, 0.14), transparent 70%);
+}
+[data-theme="light"] {
+  --page:    #faf6f0;
+  --page-2:  #f2ece4;
+  --panel:   #efe7dc;
+  --card:    #fffdf9;
+  --line:    #e0d8cd;
+  --line-2:  #c9bfb4;
+  --fg:      #1a1613;
+  --fg-2:    #3a332c;
+  --fg-3:    #4e463d;
+  --fg-4:    #6b6158;
+  --jp:      #d9402a;
+  --ps:      #6a4de0;
+  --js:      #0e8a7c;
+  --ok:      #1f7a54;
+  --warn:    #9a6414;
+  --shot-shadow: 0 30px 70px -24px rgba(40, 25, 10, 0.35);
+  --glow: radial-gradient(60% 60% at 70% 30%, rgba(255, 90, 60, 0.12), transparent 70%),
+          radial-gradient(50% 50% at 20% 80%, rgba(139, 108, 255, 0.10), transparent 70%);
+}
+/* darker accents on paper so accent text clears AA */
+[data-theme="light"][data-app="hub"],
+[data-theme="light"][data-app="jp"]       { --accent: #d9402a; --focus-ring: #d9402a; }
+[data-theme="light"][data-app="ps"]       { --accent: #6a4de0; --focus-ring: #6a4de0; }
+[data-theme="light"][data-app="jamstand"] { --accent: #0e8a7c; --focus-ring: #0e8a7c; }
+/* investors has no app of its own: neutral ink accent */
+[data-app="investors"] { --accent: var(--fg); --focus-ring: var(--fg-2); --accent-ghost: rgba(138, 128, 119, 0.14); }
